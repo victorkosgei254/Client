@@ -110,7 +110,7 @@ class Test extends Component {
                   <Card className={classes.product.id}>
                     <CardMedia
                       className={classes.cardMedia}
-                      image="https://source.unsplash.com/random"
+                      image={product.image}
                       title="Image title"
                     />
                     <CardContent className={classes.cardContent}>

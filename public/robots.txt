@@ -1,3 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
+#https://agile-spire-45149.herokuapp.com
+#https://secure-sands-30051.herokuapp.com
 User-agent: *
 Disallow:

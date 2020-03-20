@@ -12,9 +12,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-
+import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import Menu from "./menu";
+
+import { connect } from "react-redux";
 const useStyles = theme => ({
   icon: {
     marginRight: theme.spacing(2)
@@ -30,7 +32,7 @@ const useStyles = theme => ({
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8)
   },
-  card: {
+  product: {
     height: "100%",
     display: "flex",
     flexDirection: "column"
@@ -46,21 +48,16 @@ const useStyles = theme => ({
     padding: theme.spacing(6)
   }
 });
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 class Test extends Component {
-  state = {
-    isLogin: true
-  };
   render() {
-    const { classes } = this.props;
-    console.log(classes);
+    const { classes, products, isLogin } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
         <AppBar position="fixed">
           <Toolbar>
-            {this.state.isLogin ? <Menu /> : <AppsIcon />}
+            {isLogin ? <Menu /> : <AppsIcon />}
             <Typography variant="h6" color="inherit" noWrap>
               Rental.io
             </Typography>
@@ -108,9 +105,9 @@ class Test extends Component {
           <Container className={classes.cardGrid} maxWidth={false}>
             {/* End hero unit */}
             <Grid container spacing={4}>
-              {cards.map(card => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
-                  <Card className={classes.card}>
+              {products.results.map(product => (
+                <Grid item key={product.id} xs={12} sm={6} md={4}>
+                  <Card className={classes.product.id}>
                     <CardMedia
                       className={classes.cardMedia}
                       image="https://source.unsplash.com/random"
@@ -118,18 +115,18 @@ class Test extends Component {
                     />
                     <CardContent className={classes.cardContent}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        House Name
+                        {product.name}
                       </Typography>
-                      <Typography>
-                        Brief Description on the houses on rent.
-                      </Typography>
+                      <Typography>Rental Fee : ${product.price}</Typography>
                     </CardContent>
                     <CardActions>
                       <Button size="small" color="primary">
-                        View
+                        <VisibilityIcon />
+                        -View
                       </Button>
                       <Button size="small" color="primary">
-                        Edit
+                        <AddShoppingCartIcon />
+                        -Add to Cart
                       </Button>
                     </CardActions>
                   </Card>
@@ -143,4 +140,16 @@ class Test extends Component {
   }
 }
 
-export default withStyles(useStyles)(Test);
+function mapStateToProps(state) {
+  return {
+    products: state.products.products,
+    count: state.products.count,
+    isLogin: state.user.isLogin
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(useStyles)(Test));
+// export default compose(
+//   withStyles(useStyles, { name: "Test" }),
+//   connect(mapStateToProps, null)
+// )(Test);

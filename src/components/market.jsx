@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import AppsIcon from "@material-ui/icons/Apps";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import Menu from "./menu";
 
 import { connect } from "react-redux";
+
+import Badge from "@material-ui/core/Badge";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
 const useStyles = theme => ({
   icon: {
     marginRight: theme.spacing(2)
@@ -50,19 +49,23 @@ const useStyles = theme => ({
 });
 
 class Test extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  addToCart(item) {
+    console.log(item);
+    this.props.dispatch({ type: "ADD_CART", payload: item });
+    console.log(this.props);
+  }
+
   render() {
-    const { classes, products, isLogin } = this.props;
+    const { classes, products, isLogin, cart } = this.props;
+    console.log(cart.count);
+
     return (
       <React.Fragment>
-        <CssBaseline />
-        <AppBar position="fixed">
-          <Toolbar>
-            {isLogin ? <Menu /> : <AppsIcon />}
-            <Typography variant="h6" color="inherit" noWrap>
-              Rental.io
-            </Typography>
-          </Toolbar>
-        </AppBar>
         <main>
           {/* Hero unit */}
           <div className={classes.heroContent}>
@@ -74,28 +77,26 @@ class Test extends Component {
                 color="textPrimary"
                 gutterBottom
               >
-                Book A Room
+                My Cart
+                <Badge
+                  badgeContent={cart.count}
+                  color="secondary"
+                  styles={{ fontSize: 30 }}
+                  onClick={product => this.handleClickOpen}
+                >
+                  <ShoppingCartIcon />
+                </Badge>
               </Typography>
-              <Typography
-                variant="h5"
-                align="center"
-                color="textSecondary"
-                paragraph
-              >
-                Something short and leading about the collection below—its
-                contents, the creator, etc. Make it short and sweet, but not too
-                short so folks don&apos;t simply skip over it entirely.
-              </Typography>
+
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
                   <Grid item>
-                    <Button variant="contained" color="primary" href="/signin">
-                      sigin
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="outlined" color="primary" href="/signup">
-                      signup
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      href={isLogin ? "/checkout" : "/signin"}
+                    >
+                      CheckOut
                     </Button>
                   </Grid>
                 </Grid>
@@ -124,7 +125,11 @@ class Test extends Component {
                         <VisibilityIcon />
                         -View
                       </Button>
-                      <Button size="small" color="primary">
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={this.addToCart.bind(this, product)}
+                      >
                         <AddShoppingCartIcon />
                         -Add to Cart
                       </Button>
@@ -144,7 +149,8 @@ function mapStateToProps(state) {
   return {
     products: state.products.products,
     count: state.products.count,
-    isLogin: state.user.isLogin
+    isLogin: state.user.isLogin,
+    cart: state.cart
   };
 }
 

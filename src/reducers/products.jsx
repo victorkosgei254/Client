@@ -1,5 +1,5 @@
 const intialState = {
-  count: 0,
+  count: 20,
   products: {
     count: 14,
     results: [

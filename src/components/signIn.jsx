@@ -11,7 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
+import { connect } from "react-redux";
 const useStyles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -32,9 +32,28 @@ const useStyles = theme => ({
   }
 });
 class SigIn extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.authenticateUser.bind(this);
+    this.handleChange.bind(this);
+  }
+
+  handleChange = event => {
+    const name = event.target.name;
+    this.setState({ [name]: event.target.value });
+
+    event.preventDefault();
+  };
+  authenticateUser = event => {
+    //call dispatcher with
+    console.log(this.state);
+    this.props.dispatch({ type: "LOGGING_IN" });
+    event.preventDefault();
+  };
   render() {
     const { classes } = this.props;
+    console.log(this.props);
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -56,6 +75,7 @@ class SigIn extends Component {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={this.handleChange}
             />
             <TextField
               variant="outlined"
@@ -67,6 +87,7 @@ class SigIn extends Component {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={this.handleChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -78,13 +99,14 @@ class SigIn extends Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.authenticateUser}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="/" variant="body2">
+                  Home
                 </Link>
               </Grid>
               <Grid item>
@@ -100,4 +122,11 @@ class SigIn extends Component {
   }
 }
 
-export default withStyles(useStyles)(SigIn);
+function mapStateToProps(state) {
+  return {
+    isLogin: state.user.isLogin
+  };
+}
+
+export default connect(mapStateToProps)(withStyles(useStyles)(SigIn));
+// export default withStyles(useStyles)(SigIn);

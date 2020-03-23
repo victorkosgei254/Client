@@ -3,14 +3,16 @@ const initialState = {
   email: null,
   cart: [],
   token: null,
-  isLogin: false,
-  profile: null
+  profile: null,
+  isLogin: false
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOGGING_IN": {
-      return state;
+      console.log("Logging in user");
+      console.log(action.payload);
+      return { ...state, isLogIn: true };
     }
     default:
       return state;
